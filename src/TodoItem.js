@@ -1,14 +1,33 @@
 import React, { useState, useContext } from 'react'
 import { Context } from './context'
-export default function TodoItem({ title, id, completed }) {
+import TodoList from './TodoList'
 
-  const [checked, setChecket] = useState(completed)
-  const { toggledTodo, removeTodo } = useContext(Context)
+
+export default function TodoItem({ title, id, complited }) {
+
+
+  // const [checked, setChecket] = useState(completed)
+  const { toggledTodo, removeTodo, setTodos } = useContext(Context)
 
   const cls = ['todo']
+  const [showEdit, setShowEdit] = useState(false)
 
-  if (completed) {
+  if (complited) {
     cls.push('completed')
+  }
+
+  const handleEdit = e => {
+    e.preventDefault()
+    let { teext } = e.target
+    console.log(teext.value);
+    setTodos((prev) => {
+      let j = prev.findIndex(element => (element.id === id)
+      );
+      prev[j].title = teext.value
+
+      return [...prev]
+    })
+    setShowEdit(false)
   }
 
 
@@ -17,11 +36,22 @@ export default function TodoItem({ title, id, completed }) {
       <label>
         <input
           type="checkbox"
-          checked={completed}
+          checked={complited}
           onChange={() => toggledTodo(id)}
         />
-        <span>{title}</span>
+        <span >{title}</span>
+        {showEdit && <form onSubmit={(e) => {
+          handleEdit(e)
+        }} > <input name="teext" defaultValue={title} type="text" id={id}
 
+          />
+          <button type="submit"
+          >Submit Changes</button>
+        </form>}
+
+        <button
+          onClick={() => setShowEdit(true)}
+        >EDIT</button>
         <i
           className="material-icons red-text"
           onClick={() => removeTodo(id)}

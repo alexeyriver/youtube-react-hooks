@@ -1,14 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import TodoList from './TodoList'
 import { Context } from './context'
+
+
 export default function App() {
+
   const [todos, setTodos] = useState([])
   const [todoTitle, setTodoTitle] = useState('')
+
   const handleClick = () => console.log('click')
 
   useEffect(() => {
-    const raw = localStorage.getItem('todos') || []
-    setTodos(JSON.parse(raw))
+    
+      const raw = localStorage.getItem('todos') || []
+      if (raw.length) {
+      setTodos(JSON.parse(raw))
+    }
   }, [])
 
   useEffect(() => {
@@ -25,6 +32,7 @@ export default function App() {
 
   const addTodo = event => {
     if (event.key === 'Enter') {
+
       setTodos([
         ...todos,
         {
@@ -44,16 +52,25 @@ export default function App() {
   }
   const toggledTodo = id => {
     setTodos(todos.map(todo => {
-      if (todo.id = id) {
+      if (todo.id === id) {
         todo.complited = !todo.complited
       }
       return todo
     }))
   }
 
+  const changetodo = id => {
+    let input = document.getElementById(id)
+    input.type = 'text'
+    input.default.value=
+    console.log(input.value ) // input.value 
+    
+  }
+
+
   return (
     <Context.Provider value={{
-toggledTodo, removeTodo
+      toggledTodo, removeTodo , setTodos
     }}>
       <div className="container">
         <h1>Todo app</h1>
@@ -71,6 +88,7 @@ toggledTodo, removeTodo
         <TodoList todos={todos} />
       </div>
     </Context.Provider>
+
   );
 
 }
